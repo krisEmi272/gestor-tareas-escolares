@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTask - Gestión de Tareas Escolares</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        nav a:hover {
+            opacity: 0.8;
+        }
+        
+        .hero {
+            padding: 3rem 0;
+            text-align: center;
+            background-color: white;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            padding: 2rem 0;
+        }
+        
+        .tasks-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .task-form {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .task-list {
+            margin-top: 2rem;
+        }
+        
+        .task-item {
+            background-color: white;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .task-info h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .task-meta {
+            display: flex;
+            gap: 15px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .task-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--gray);
+            transition: color 0.3s;
+        }
+        
+        .task-actions .complete-btn:hover {
+            color: var(--success);
+        }
+        
+        .task-actions .delete-btn:hover {
+            color: var(--warning);
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .reminders-list {
+            margin-top: 1rem;
+        }
+        
+        .reminder-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .reminder-item:last-child {
+            border-bottom: none;
+        }
+        
+        .reminder-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .subject-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .math { background-color: #e3f2fd; color: #1565c0; }
+        .science { background-color: #e8f5e9; color: #2e7d32; }
+        .history { background-color: #fff3e0; color: #ef6c00; }
+        .language { background-color: #fce4ec; color: #c2185b; }
+        .art { background-color: #f3e5f5; color: #7b1fa2; }
+        .other { background-color: #e0e0e0; color: #424242; }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-tasks"></i>
+                    <span>EduTask</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
+                        <li><a href="#"><i class="fas fa-calendar-alt"></i> Calendario</a></li>
+                        <li><a href="#"><i class="fas fa-chart-bar"></i> Progreso</a></li>
+                        <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Gestiona tus tareas escolares de forma inteligente</h1>
+            <p>Organiza tus asignaciones, establece recordatorios y mejora tu rendimiento académico con nuestra plataforma diseñada especialmente para estudiantes de secundaria.</p>
+            <a href="#" class="btn">Comenzar ahora</a>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="tasks-section">
+                <h2 class="section-title"><i class="fas fa-list-check"></i> Mis Tareas</h2>
+                
+                <div class="task-form">
+                    <h3>Agregar Nueva Tarea</h3>
+                    <form id="taskForm">
+                        <div class="form-group">
+                            <label for="taskTitle">Título de la tarea</label>
+                            <input type="text" id="taskTitle" class="form-control" placeholder="Ej: Ensayo sobre la Revolución Industrial">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskSubject">Materia</label>
+                            <select id="taskSubject" class="form-control">
+                                <option value="math">Matemáticas</option>
+                                <option value="science">Ciencias</option>
+                                <option value="history">Historia</option>
+                                <option value="language">Lenguaje</option>
+                                <option value="art">Arte</option>
+                                <option value="other">Otra</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskDueDate">Fecha de entrega</label>
+                                <input type="date" id="taskDueDate" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="taskPriority">Prioridad</label>
+                                <select id="taskPriority" class="form-control">
+                                    <option value="low">Baja</option>
+                                    <option value="medium">Media</option>
+                                    <option value="high">Alta</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taskDescription">Descripción (opcional)</label>
+                            <textarea id="taskDescription" class="form-control" rows="3" placeholder="Detalles adicionales sobre la tarea..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn">Agregar Tarea</button>
+                    </form>
+                </div>
+                
+                <div class="task-list">
+                    <h3>Tareas Pendientes</h3>
+                    
+                    <div class="task-item">
+                        <div class="task-info">
+                            <h3>Problemas de álgebra - Página 125</h3>
+                            <div class="task-meta">
+                                <span><i class="far fa-calendar"></i> Vence: 15 Oct, 2023</span>
+                                <span><i class="fas fa-book"></i> <span class="subject-tag math">Matemáticas</span></span>
+                                <span><i class="fas fa-flag"></i> Prioridad: Alta</span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="complete-btn" title="Marcar como completada"><i class="far fa-circle"></i></button>
+                            <button class="delete-btn" title="Eliminar tarea"><i class="far fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item">
+                        <div class="task-info">
+                            <h3>Ensayo sobre el cambio climático</h3>
+                            <div class="task-meta">
+                                <span><i class="far fa-calendar"></i> Vence: 18 Oct, 2023</span>
+                                <span><i class="fas fa-book"></i> <span class="subject-tag science">Ciencias</span></span>
+                                <span><i class="fas fa-flag"></i> Prioridad: Media</span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="complete-btn" title="Marcar como completada"><i class="far fa-circle"></i></button>
+                            <button class="delete-btn" title="Eliminar tarea"><i class="far fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item">
+                        <div class="task-info">
+                            <h3>Lectura: Capítulo 5 de Don Quijote</h3>
+                            <div class="task-meta">
+                                <span><i class="far fa-calendar"></i> Vence: 20 Oct, 2023</span>
+                                <span><i class="fas fa-book"></i> <span class="subject-tag language">Lenguaje</span></span>
+                                <span><i class="fas fa-flag"></i> Prioridad: Baja</span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="complete-btn" title="Marcar como completada"><i class="far fa-circle"></i></button>
+                            <button class="delete-btn" title="Eliminar tarea"><i class="far fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="card">
+                    <h3 class="section-title"><i class="fas fa-bell"></i> Recordatorios</h3>
+                    <div class="reminders-list">
+                        <div class="reminder-item">
+                            <div class="reminder-icon">
+                                <i class="fas fa-exclamation"></i>
+                            </div>
+                            <div>
+                                <p>Problemas de álgebra vence en 2 días</p>
+                                <small>15 Oct, 2023</small>
+                            </div>
+                        </div>
+                        
+                        <div class="reminder-item">
+                            <div class="reminder-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div>
+                                <p>Revisión de examen de historia</p>
+                                <small>16 Oct, 2023</small>
+                            </div>
+                        </div>
+                        
+                        <div class="reminder-item">
+                            <div class="reminder-icon">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <div>
+                                <p>Práctica de laboratorio de química</p>
+                                <small>17 Oct, 2023</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="section-title"><i class="fas fa-chart-pie"></i> Estadísticas</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">7</div>
+                            <div class="stat-label">Tareas Pendientes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Completadas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">Vencen esta semana</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">85%</div>
+                            <div class="stat-label">Rendimiento</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="section-title"><i class="fas fa-lightbulb"></i> Consejos de Estudio</h3>
+                    <p>Divide las tareas grandes en partes más pequeñas y manejables. Establece tiempos específicos para trabajar en cada parte.</p>
+                    <a href="#" class="btn btn-outline" style="margin-top: 10px; display: inline-block;">Más consejos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">
+                    <i class="fas fa-tasks"></i>
+                    <span>EduTask</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Acerca de</a>
+                    <a href="#">Contacto</a>
+                    <a href="#">Privacidad</a>
+                    <a href="#">Términos</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Funcionalidad básica para agregar tareas
+        document.getElementById('taskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('taskTitle').value;
+            const subject = document.getElementById('taskSubject').value;
+            const dueDate = document.getElementById('taskDueDate').value;
+            const priority = document.getElementById('taskPriority').value;
+            
+            if (!title || !dueDate) {
+                alert('Por favor, completa los campos obligatorios');
+                return;
+            }
+            
+            // Aquí normalmente enviaríamos los datos a un servidor
+            // Por ahora, solo mostraremos un mensaje
+            alert('Tarea agregada exitosamente: ' + title);
+            
+            // Limpiar el formulario
+            document.getElementById('taskForm').reset();
+        });
+        
+        // Funcionalidad para marcar tareas como completadas
+        document.querySelectorAll('.complete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const taskItem = this.closest('.task-item');
+                taskItem.style.opacity = '0.7';
+                taskItem.style.textDecoration = 'line-through';
+                this.innerHTML = '<i class="fas fa-check-circle"></i>';
+                this.style.color = 'var(--success)';
+            });
+        });
+        
+        // Funcionalidad para eliminar tareas
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+                    this.closest('.task-item').remove();
+                }
+            });
+        });
+        
+        // Establecer fecha mínima como hoy para el campo de fecha
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('taskDueDate').min = today;
+    </script>
+</body>
+</html>
